@@ -6,7 +6,7 @@ extern "C" void SerialWriteByte(uint8_t value);
 
 namespace
 {
-    constexpr char VgaMessage[] = "Hello World!";
+    constexpr char VgaMessage[] = "Hello World";
 
     constexpr uint16_t MakeVgaCell(char character, uint8_t color)
     {
