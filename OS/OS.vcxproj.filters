@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Kernel">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Boot">
+      <UniqueIdentifier>{3A65459E-11BB-49E5-9083-F8FA922B5469}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Build">
+      <UniqueIdentifier>{E525BB3A-EA2E-4A17-B35A-6583F2F5E0C7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\kernel\main.cpp">
+      <Filter>Kernel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\kernel\**\*.c">
+      <Filter>Kernel</Filter>
+    </ClCompile>
+    <ClCompile Include="..\kernel\**\*.cpp" Exclude="..\kernel\main.cpp">
+      <Filter>Kernel</Filter>
+    </ClCompile>
+    <MASM Include="..\kernel\entry.asm">
+      <Filter>Kernel</Filter>
+    </MASM>
+    <MASM Include="..\kernel\**\*.asm" Exclude="..\kernel\entry.asm">
+      <Filter>Kernel</Filter>
+    </MASM>
+    <None Include="..\boot\stage1.asm">
+      <Filter>Boot</Filter>
+    </None>
+    <None Include="..\boot\stage2.asm">
+      <Filter>Boot</Filter>
+    </None>
+    <None Include="..\build\build-image.ps1">
+      <Filter>Build</Filter>
+    </None>
+    <None Include="..\run-vbox.ps1">
+      <Filter>Build</Filter>
+    </None>
+    <None Include="..\tools\bootstrap.ps1">
+      <Filter>Build</Filter>
+    </None>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,7 @@
+/build/Debug/
+/build/Release/
+/build/obj/
+/tools/uasm/
+*.VC.db
+*.VC.opendb
+/.vs/
