@@ -14,11 +14,12 @@ namespace
             | (static_cast<uint16_t>(color) << 8);
     }
 
-    void WriteSerial(const char* text)
+    // Функция для отправки строки в последовательный порт
+    void WriteSerial(const char* text) 
     {
         while (*text != '\0')
         {
-            SerialWriteByte(static_cast<uint8_t>(*text));
+            SerialWriteByte(static_cast<uint8_t>(*text)); // отправляет текущий символ
             ++text;
         }
     }
