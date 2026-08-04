@@ -4,6 +4,7 @@ EXTERN KernelMain:PROC
 PUBLIC KernelEntry
 PUBLIC SerialInit
 PUBLIC SerialWriteByte
+PUBLIC ReadKeyboardByte
 
 .code
 
@@ -56,6 +57,18 @@ serial_wait:
     out dx, al
     ret
 SerialWriteByte ENDP
+
+ReadKeyboardByte PROC
+kbd_wait:
+    mov dx, 064h
+    in al, dx
+    test al, 01h
+    jz kbd_wait
+
+    mov dx, 060h
+    in al, dx
+    ret
+ReadKeyboardByte ENDP
 
 .data?
 ALIGN 16

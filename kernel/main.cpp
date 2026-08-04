@@ -3,6 +3,7 @@
 
 extern "C" void SerialInit();
 extern "C" void SerialWriteByte(uint8_t value);
+extern "C" uint8_t ReadKeyboardByte();
 
 namespace
 {
@@ -36,10 +37,25 @@ extern "C" [[noreturn]] void KernelMain()
     }
 
     SerialInit();
-    WriteSerial("\r\nKernelMain reached successfully.\r\n");
+    uint32_t vga_index = 80;
 
     for (;;)
     {
-        __halt();
+        uint8_t scancode = ReadKeyboardByte();
+
+        if (!(scancode & 0x80))
+        {
+            char character = '?';
+            if (scancode == 0x1E) character = 'A';
+            else if (scancode == 0x30) character = 'B';
+
+            if (vga_index < 80 * 25)
+            {
+                vga[vga_index] = MakeVgaCell(character, color);
+                vga_index++;
+            }
+
+            SerialWriteByte(scancode);
+        }
     }
 }
