@@ -25,10 +25,6 @@ namespace
         }
     }
 
-    void print()
-    {
-
-    }
 }
 
 extern "C" [[noreturn]] void KernelMain()
@@ -36,11 +32,19 @@ extern "C" [[noreturn]] void KernelMain()
     constexpr uint8_t color = 0x0F;
     constexpr uint8_t Backspace = 0x0E;
     constexpr uint8_t Enter = 0x1C;
+    constexpr uint8_t Capslock = 0x3A;
 
-    constexpr char Keyboard[] = {
+    constexpr char CapsKeyboard[] = {
         'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '[', ']',
         'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ';',
         'Z', 'X', 'C', 'V', 'B', 'N', 'M', ',', '.', '/',
+        ' '
+    };
+
+    constexpr char Keyboard[] = {
+        'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']',
+        'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';',
+        'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/',
         ' '
     };
 
@@ -63,13 +67,19 @@ extern "C" [[noreturn]] void KernelMain()
     uint32_t vga_index = 80;
     uint8_t keyboard_size = sizeof(Keyboard) / sizeof(Keyboard[0]);
 
+    bool capslock_pressed = false;
+
     for (;;)
     {
         uint8_t scancode = ReadKeyboardByte();
 
         if (!(scancode & 0x80))
         {
-            if (scancode == Backspace)
+            if (scancode == Capslock)
+            {
+                capslock_pressed = !capslock_pressed;
+            }
+            else if (scancode == Backspace)
             {
                 vga_index--;
                 vga[vga_index] = MakeVgaCell(' ', color);
@@ -85,7 +95,7 @@ extern "C" [[noreturn]] void KernelMain()
 
                 for (uint8_t i = 0; i < keyboard_size; ++i)
                 {
-                    if (scancode == scancodes[i]) character = Keyboard[i];
+                    if (scancode == scancodes[i]) character = capslock_pressed ? CapsKeyboard[i] : Keyboard[i];
                 }
 
 
