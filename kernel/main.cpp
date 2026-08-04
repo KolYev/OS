@@ -24,12 +24,18 @@ namespace
             ++text;
         }
     }
+
+    void print()
+    {
+
+    }
 }
 
 extern "C" [[noreturn]] void KernelMain()
 {
     constexpr uint8_t color = 0x0F;
     constexpr uint8_t Backspace = 0x0E;
+    constexpr uint8_t Enter = 0x1C;
 
     constexpr char Keyboard[] = {
         'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '[', ']',
@@ -66,6 +72,11 @@ extern "C" [[noreturn]] void KernelMain()
             if (scancode == Backspace)
             {
                 vga_index--;
+                vga[vga_index] = MakeVgaCell(' ', color);
+            }
+            else if (scancode == Enter)
+            {
+                vga_index += 80;
                 vga[vga_index] = MakeVgaCell(' ', color);
             }
             else
