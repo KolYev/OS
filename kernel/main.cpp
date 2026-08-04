@@ -86,8 +86,8 @@ extern "C" [[noreturn]] void KernelMain()
             }
             else if (scancode == Enter)
             {
-                vga_index += 80;
-                vga[vga_index] = MakeVgaCell(' ', color);
+                uint32_t row = vga_index / 80;
+                vga_index = (row + 1) * 80;
             }
             else
             {
