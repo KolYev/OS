@@ -50,13 +50,12 @@ class UI
             if (index > 80 && index < 160 || index >= 80 * 24)
             {
                 print("-", index);
-                --index; // Компенсируем index++, который сделал print
+                --index;
             }
-            // Вертикальные линии: левый край (% 80 == 0) и правый край (% 80 == 79)
             else if (index % 80 == 0 && index > 80 || index % 80 == 79 && index > 80)
             {
                 print("|", index);
-                --index; // Компенсируем index++, который сделал print
+                --index;
             }
         }
     }
