@@ -27,6 +27,14 @@ namespace
 
 }
 
+class UI
+{
+    void Display()
+    {
+
+    }
+};
+
 extern "C" [[noreturn]] void KernelMain()
 {
     constexpr uint8_t color = 0x0F;
