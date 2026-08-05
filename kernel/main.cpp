@@ -45,10 +45,25 @@ class UI
 {
     void Display()
     {
-        //for (uint32_t index = 0; index < 80 * 25; ++index)
-        //{
-        //    
-        //}
+        for (uint32_t index = 0; index < 80 * 25; ++index)
+        {
+            if (index > 80 && index < 160 || index >= 80 * 24)
+            {
+                print("-", index);
+                --index; // Компенсируем index++, который сделал print
+            }
+            // Вертикальные линии: левый край (% 80 == 0) и правый край (% 80 == 79)
+            else if (index % 80 == 0 && index > 80 || index % 80 == 79 && index > 80)
+            {
+                print("|", index);
+                --index; // Компенсируем index++, который сделал print
+            }
+        }
+    }
+public:
+    UI()
+    {
+        Display();
     }
 };
 
@@ -81,6 +96,7 @@ extern "C" [[noreturn]] void KernelMain()
 
     uint32_t vga_index = 0;
     print(message, vga_index);
+    UI ui;
 
     SerialInit();
     uint8_t keyboard_size = sizeof(Keyboard) / sizeof(Keyboard[0]);
