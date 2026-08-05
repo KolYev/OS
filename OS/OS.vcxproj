@@ -10,7 +10,6 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-
   <PropertyGroup Label="Globals">
     <VCProjectVersion>18.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -18,9 +17,7 @@
     <RootNamespace>OS</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
-
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
@@ -33,18 +30,14 @@
     <PlatformToolset>v145</PlatformToolset>
     <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
-
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
     <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.props" />
   </ImportGroup>
   <ImportGroup Label="Shared" />
   <ImportGroup Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props"
-            Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')"
-            Label="LocalAppDataPlatform" />
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <ProjectRoot>$(MSBuildProjectDirectory)\..</ProjectRoot>
@@ -55,7 +48,6 @@
     <LinkIncremental>false</LinkIncremental>
     <GenerateManifest>false</GenerateManifest>
   </PropertyGroup>
-
   <ItemDefinitionGroup>
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
@@ -90,7 +82,6 @@
       <AdditionalOptions>/ALIGN:4096 /FILEALIGN:512 /MACHINE:X64 /IGNORE:4108 /IGNORE:4281 %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
-
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
@@ -107,7 +98,6 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
     </ClCompile>
   </ItemDefinitionGroup>
-
   <ItemGroup>
     <ClCompile Include="..\kernel\main.cpp" />
     <ClCompile Include="..\kernel\**\*.c" />
@@ -115,7 +105,6 @@
     <MASM Include="..\kernel\entry.asm" />
     <MASM Include="..\kernel\**\*.asm" Exclude="..\kernel\entry.asm" />
   </ItemGroup>
-
   <ItemGroup>
     <None Include="..\boot\stage1.asm" />
     <None Include="..\boot\stage2.asm" />
@@ -123,21 +112,17 @@
     <None Include="..\run-vbox.ps1" />
     <None Include="..\tools\bootstrap.ps1" />
   </ItemGroup>
-
   <Target Name="BootstrapTools" BeforeTargets="PrepareForBuild">
     <Exec Command="powershell.exe -NoProfile -ExecutionPolicy Bypass -File &quot;$(ProjectRoot)\tools\bootstrap.ps1&quot;" />
   </Target>
-
   <Target Name="BuildBootloader" BeforeTargets="Link" DependsOnTargets="BootstrapTools">
     <MakeDir Directories="$(OutDir)" />
     <Exec Command="&quot;$(ProjectRoot)\tools\uasm\uasm64.exe&quot; -bin -q -Fo&quot;$(OutDir)stage1.bin&quot; &quot;$(ProjectRoot)\boot\stage1.asm&quot;" />
     <Exec Command="&quot;$(ProjectRoot)\tools\uasm\uasm64.exe&quot; -bin -q -Fo&quot;$(OutDir)stage2.bin&quot; &quot;$(ProjectRoot)\boot\stage2.asm&quot;" />
   </Target>
-
   <Target Name="BuildDiskImage" AfterTargets="Build">
     <Exec Command="powershell.exe -NoProfile -ExecutionPolicy Bypass -File &quot;$(ProjectRoot)\build\build-image.ps1&quot; -Stage1 &quot;$(OutDir)stage1.bin&quot; -Stage2 &quot;$(OutDir)stage2.bin&quot; -Kernel &quot;$(TargetPath)&quot; -Output &quot;$(OutDir)os.img&quot;" />
   </Target>
-
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.targets" />
