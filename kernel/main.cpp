@@ -7,7 +7,9 @@ extern "C" uint8_t ReadKeyboardByte();
 
 namespace
 {
-    constexpr char VgaMessage[] = "Hello World";
+    constexpr uint8_t text_color = 0x0F;
+    volatile auto* const vga = reinterpret_cast<volatile uint16_t*>(0xB8000);
+    constexpr char message[] = "Hello World";
 
     constexpr uint16_t MakeVgaCell(char character, uint8_t color)
     {
@@ -25,19 +27,32 @@ namespace
         }
     }
 
+    void print(const char text[])
+    {
+        for (uint32_t index = 0; text[index] != '\0'; ++index)
+        {
+            vga[index] = MakeVgaCell(text[index], text_color);
+        }
+    }
+
 }
 
 class UI
 {
     void Display()
     {
-
+        //for (uint32_t index = 0; index < 80 * 25; ++index)
+        //{
+        //    if (index < 80)
+        //    {
+        //        
+        //    }
+        //}
     }
 };
 
 extern "C" [[noreturn]] void KernelMain()
 {
-    constexpr uint8_t color = 0x0F;
     constexpr uint8_t Backspace = 0x0E;
     constexpr uint8_t Enter = 0x1C;
     constexpr uint8_t Capslock = 0x3A;
@@ -62,14 +77,8 @@ extern "C" [[noreturn]] void KernelMain()
         0x2C, 0x2D, 0x2E, 0x2F, 0x30, 0x31, 0x32, 0x33, 0x34, 0x35,
         0x39
     };
-    
 
-    volatile auto* const vga = reinterpret_cast<volatile uint16_t*>(0xB8000);
-
-    for (uint32_t index = 0; index < sizeof(VgaMessage) - 1; ++index)
-    {
-        vga[index] = MakeVgaCell(VgaMessage[index], color);
-    }
+    print(message);
 
     SerialInit();
     uint32_t vga_index = 80;
@@ -90,7 +99,7 @@ extern "C" [[noreturn]] void KernelMain()
             else if (scancode == Backspace)
             {
                 vga_index--;
-                vga[vga_index] = MakeVgaCell(' ', color);
+                vga[vga_index] = MakeVgaCell(' ', text_color);
             }
             else if (scancode == Enter)
             {
@@ -109,7 +118,7 @@ extern "C" [[noreturn]] void KernelMain()
 
                 if (vga_index < 80 * 25)
                 {
-                    vga[vga_index] = MakeVgaCell(character, color);
+                    vga[vga_index] = MakeVgaCell(character, text_color);
                     vga_index++;
                 }
             }
