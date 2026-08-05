@@ -27,11 +27,15 @@ namespace
         }
     }
 
-    void print(const char text[])
+    void print(const char text[], uint32_t& cursor_index)
     {
         for (uint32_t index = 0; text[index] != '\0'; ++index)
         {
-            vga[index] = MakeVgaCell(text[index], text_color);
+            if (cursor_index < 80 * 25)
+            {
+                vga[cursor_index] = MakeVgaCell(text[index], text_color);
+                cursor_index++;
+            }
         }
     }
 
@@ -43,10 +47,7 @@ class UI
     {
         //for (uint32_t index = 0; index < 80 * 25; ++index)
         //{
-        //    if (index < 80)
-        //    {
-        //        
-        //    }
+        //    
         //}
     }
 };
@@ -78,10 +79,10 @@ extern "C" [[noreturn]] void KernelMain()
         0x39
     };
 
-    print(message);
+    uint32_t vga_index = 0;
+    print(message, vga_index);
 
     SerialInit();
-    uint32_t vga_index = 80;
     uint8_t keyboard_size = sizeof(Keyboard) / sizeof(Keyboard[0]);
 
     bool capslock_pressed = false;
@@ -98,13 +99,19 @@ extern "C" [[noreturn]] void KernelMain()
             }
             else if (scancode == Backspace)
             {
-                vga_index--;
-                vga[vga_index] = MakeVgaCell(' ', text_color);
+                if (vga_index > 0)
+                {
+                    vga_index--;
+                    vga[vga_index] = MakeVgaCell(' ', text_color);
+                }
             }
             else if (scancode == Enter)
             {
                 uint32_t row = vga_index / 80;
-                vga_index = (row + 1) * 80;
+                if (row < 24)
+                {
+                    vga_index = (row + 1) * 80;
+                }
             }
             else
             {
