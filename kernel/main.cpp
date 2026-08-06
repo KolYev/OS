@@ -93,6 +93,9 @@ extern "C" [[noreturn]] void KernelMain()
         0x39
     };
 
+    // стрелки: вверх, вниз, влево, вправо
+    constexpr uint8_t arrows[] = {0x48, 0x50, 0x4B, 0x4D};
+
     uint32_t vga_index = 0;
     print(message, vga_index);
     UI ui;
@@ -127,6 +130,20 @@ extern "C" [[noreturn]] void KernelMain()
                 {
                     vga_index = (row + 1) * 80;
                 }
+            }
+            else if (scancode == arrows[0])
+            {
+                vga_index -= 81;
+
+            }
+            else if (scancode == arrows[1]) {
+                vga_index += 79;
+            }
+            else if (scancode == arrows[2]) {
+                vga_index -= 1;
+            }
+            else if (scancode == arrows[3]) {
+                vga_index += 1;
             }
             else
             {
