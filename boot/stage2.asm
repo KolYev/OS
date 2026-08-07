@@ -40,6 +40,21 @@ read_kernel:
 
     mov al, 'R'
     call serial_write
+
+    ; обработка кириллицы
+    push es
+    xor ax, ax
+    mov es, ax                  
+    mov bp, OFFSET cyrillic_font_upper
+    mov ax, 01100h              
+    mov bh, 16                  
+    xor bl, bl                  
+    mov cx, 128                 
+    mov dx, 080h                
+    int 010h
+    pop es
+    ; конец обработки кириллицы
+
     cli
     in al, 092h
     or al, 2
@@ -276,5 +291,7 @@ gdt_end:
 gdt_descriptor:
     dw gdt_end - gdt - 1
     dd 08000h + (gdt - stage2_start)
+
+INCLUDE cyrillic_font_upper.inc
 
 END stage2_start

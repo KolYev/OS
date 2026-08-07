@@ -9,7 +9,7 @@ namespace
 {
     constexpr uint8_t text_color = 0x0F;
     volatile auto* const vga = reinterpret_cast<volatile uint16_t*>(0xB8000);
-    constexpr char message[] = "Hello World";
+    constexpr char message[] = "LawlessnessOS \x8F\xE0\xA8\xA2\xA5\xE2 \xAC\xA8\xE0";
 
     constexpr uint16_t MakeVgaCell(char character, uint8_t color)
     {
