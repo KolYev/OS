@@ -66,27 +66,27 @@ public:
     }
 };
 
-extern "C" [[noreturn]] void KernelMain()
+struct Keyboard
 {
-    constexpr uint8_t Backspace = 0x0E;
-    constexpr uint8_t Enter = 0x1C;
-    constexpr uint8_t Capslock = 0x3A;
+    uint8_t Backspace = 0x0E;
+    uint8_t Enter = 0x1C;
+    uint8_t Capslock = 0x3A;
 
-    constexpr char CapsKeyboard[] = {
+    char CapsLatinKeyboard[33] = {
         'Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P', '[', ']',
         'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', ';',
         'Z', 'X', 'C', 'V', 'B', 'N', 'M', ',', '.', '/',
         ' '
     };
 
-    constexpr char Keyboard[] = {
+    char LatinKeyboard[33] = {
         'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']',
         'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';',
         'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', '/',
         ' '
     };
 
-    constexpr uint8_t scancodes[] = {
+    uint8_t scancodes[33] = {
         0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B,
         0x1E, 0x1F, 0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27,
         0x2C, 0x2D, 0x2E, 0x2F, 0x30, 0x31, 0x32, 0x33, 0x34, 0x35,
@@ -94,14 +94,19 @@ extern "C" [[noreturn]] void KernelMain()
     };
 
     // стрелки: вверх, вниз, влево, вправо
-    constexpr uint8_t arrows[] = {0x48, 0x50, 0x4B, 0x4D};
+    uint8_t arrows[4] = { 0x48, 0x50, 0x4B, 0x4D };
+};
+
+extern "C" [[noreturn]] void KernelMain()
+{
+    constexpr Keyboard keyboard;
 
     uint32_t vga_index = 0;
     print(message, vga_index);
     UI ui;
 
     SerialInit();
-    uint8_t keyboard_size = sizeof(Keyboard) / sizeof(Keyboard[0]);
+    uint8_t keyboard_size = sizeof(keyboard.LatinKeyboard) / sizeof(keyboard.LatinKeyboard[0]);
 
     bool capslock_pressed = false;
 
@@ -111,11 +116,11 @@ extern "C" [[noreturn]] void KernelMain()
 
         if (!(scancode & 0x80))
         {
-            if (scancode == Capslock)
+            if (scancode == keyboard.Capslock)
             {
                 capslock_pressed = !capslock_pressed;
             }
-            else if (scancode == Backspace)
+            else if (scancode == keyboard.Backspace)
             {
                 if (vga_index > 0)
                 {
@@ -123,7 +128,7 @@ extern "C" [[noreturn]] void KernelMain()
                     vga[vga_index] = MakeVgaCell(' ', text_color);
                 }
             }
-            else if (scancode == Enter)
+            else if (scancode == keyboard.Enter)
             {
                 uint32_t row = vga_index / 80;
                 if (row < 24)
@@ -131,18 +136,18 @@ extern "C" [[noreturn]] void KernelMain()
                     vga_index = (row + 1) * 80;
                 }
             }
-            else if (scancode == arrows[0])
+            else if (scancode == keyboard.arrows[0])
             {
                 vga_index -= 81;
 
             }
-            else if (scancode == arrows[1]) {
+            else if (scancode == keyboard.arrows[1]) {
                 vga_index += 79;
             }
-            else if (scancode == arrows[2]) {
+            else if (scancode == keyboard.arrows[2]) {
                 vga_index -= 1;
             }
-            else if (scancode == arrows[3]) {
+            else if (scancode == keyboard.arrows[3]) {
                 vga_index += 1;
             }
             else
@@ -151,7 +156,7 @@ extern "C" [[noreturn]] void KernelMain()
 
                 for (uint8_t i = 0; i < keyboard_size; ++i)
                 {
-                    if (scancode == scancodes[i]) character = capslock_pressed ? CapsKeyboard[i] : Keyboard[i];
+                    if (scancode == keyboard.scancodes[i]) character = capslock_pressed ? keyboard.CapsLatinKeyboard[i] : keyboard.LatinKeyboard[i];
                 }
 
 

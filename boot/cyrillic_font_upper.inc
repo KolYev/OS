@@ -1,5 +1,3 @@
-; Автосгенерировано из cp866-8x16.psf (пакет kbd, github.com/legionus/kbd)
-; 128 глифов 8x16, символы 0x80-0xFF, раскладка CP866
 cyrillic_font_upper LABEL BYTE
     db 000h, 000h, 01Eh, 036h, 066h, 0C6h, 0C6h, 0FEh, 0C6h, 0C6h, 0C6h, 0C6h, 000h, 000h, 000h, 000h ; 0x80
     db 000h, 000h, 0FEh, 062h, 062h, 060h, 07Ch, 066h, 066h, 066h, 066h, 0FCh, 000h, 000h, 000h, 000h ; 0x81
