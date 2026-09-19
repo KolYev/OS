@@ -3,7 +3,7 @@ MESG DB 'Hello word','$'
 DATA ENDS
 CODE SEGMENT USE16
     ASSUME CS:CODE,DS:DATA
-BEG:
+_start:
     MOV AX,DATA
     MOV DS,AX
     MOV AH,9
@@ -11,5 +11,6 @@ BEG:
     INT 21H
     MOV AH,4CH
     INT 21H
+
 CODE ENDS
-END BEG
+END _start
